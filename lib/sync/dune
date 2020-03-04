@@ -1,0 +1,5 @@
+(library
+ (name weather)
+ (public_name weather)
+ (synopsis "Access current weather data from OpenWeather.")
+ (libraries curly))

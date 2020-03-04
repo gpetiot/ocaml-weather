@@ -1,0 +1,5 @@
+(library
+ (name weather_lib)
+ (public_name weather-lib)
+ (synopsis "Access current weather data from OpenWeather.")
+ (libraries rresult uri yojson))

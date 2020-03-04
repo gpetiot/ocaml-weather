@@ -1,0 +1,5 @@
+(library
+ (name weather_async)
+ (public_name weather-async)
+ (synopsis "Async backend")
+ (libraries cohttp-async))

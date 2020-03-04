@@ -1,0 +1,5 @@
+(library
+ (name weather_mirage)
+ (public_name weather-mirage)
+ (synopsis "Mirage backend")
+ (libraries cohttp-mirage weather-lib))
