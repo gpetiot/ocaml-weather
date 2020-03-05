@@ -1,13 +1,4 @@
-type t =
-  ?lang:Lang.t ->
-  ?units:Units.t ->
-  api_key:string ->
-  ?userinfo:string ->
-  ?host:string ->
-  ?port:int ->
-  ?fragment:string ->
-  unit ->
-  Uri.t
+type t = ?lang:Lang.t -> ?units:Units.t -> api_key:string -> Uri.t
 
 val by_city_state_country :
   city_name:string -> state:string -> country_code:string -> t

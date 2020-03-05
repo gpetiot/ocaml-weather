@@ -1,17 +1,9 @@
-type t =
-  ?lang:Lang.t ->
-  ?units:Units.t ->
-  api_key:string ->
-  ?userinfo:string ->
-  ?host:string ->
-  ?port:int ->
-  ?fragment:string ->
-  unit ->
-  Uri.t
+type t = ?lang:Lang.t -> ?units:Units.t -> api_key:string -> Uri.t
 
 let generic_uri ?(lang = Lang.english) ?(units = Units.Standard) ~api_key ~query
     =
-  Uri.make ~scheme:"https" ~path:"api.openweathermap.org/data/2.5/weather"
+  Uri.make ~scheme:"https" ~host:"api.openweathermap.org"
+    ~path:"/data/2.5/weather"
     ~query:
       ( query
       @ [
@@ -19,6 +11,7 @@ let generic_uri ?(lang = Lang.english) ?(units = Units.Standard) ~api_key ~query
           ("lang", [ Format.asprintf "%a" Lang.pp lang ]);
           ("units", [ Format.asprintf "%a" Units.pp units ]);
         ] )
+    ()
 
 let to_int s = Format.asprintf "%i" s
 
