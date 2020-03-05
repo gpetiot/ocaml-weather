@@ -2,4 +2,4 @@
  (name weather_lwt)
  (public_name weather-lwt)
  (synopsis "Lwt backend")
- (libraries cohttp-lwt))
+ (libraries cohttp-lwt weather-lib))

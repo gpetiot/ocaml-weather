@@ -1,0 +1,4 @@
+(executable
+ (public_name example_weather_lwt)
+ (package weather-lwt)
+ (libraries weather-lwt cohttp-lwt-unix))
