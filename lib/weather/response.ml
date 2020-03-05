@@ -1,4 +1,4 @@
-type coord = { lon : int; lat : int }
+type coord = { lon : float; lat : float }
 
 type weather = { id : int; main : string; description : string; icon : string }
 
@@ -9,17 +9,17 @@ type main = {
   temp_max : float;
   pressure : int;
   humidity : int;
-  sea_level : int;
-  grnd_level : int;
+  sea_level : int option;
+  grnd_level : int option;
 }
 
 type wind = { speed : float; deg : float }
 
 type clouds = { all : int }
 
-type rain = { one_h : int; three_h : int }
+type rain = { one_h : float; three_h : float option }
 
-type snow = { one_h : int; three_h : int }
+type snow = { one_h : float; three_h : float option }
 
 type sys = { country : string; sunrise : int; sunset : int }
 
@@ -31,7 +31,7 @@ type t = {
   wind : wind;
   clouds : clouds;
   rain : rain;
-  snow : snow;
+  snow : snow option;
   dt : int;
   sys : sys;
   timezone : int;
@@ -58,19 +58,33 @@ module Convert = struct
   let float ~field json =
     match Util.member field json with
     | `Float f -> R.ok f
+    | `Int i -> R.ok (float_of_int i)
     | `Null -> R.error_msgf "Could not find %S from:\n%a" field pp json
     | _ -> R.error_msgf "Could not parse %S from:\n%a" field pp json
+
+  let list ~field idx json =
+    match Util.member field json with
+    | `List l -> (
+        match List.nth_opt l idx with
+        | Some k -> R.ok k
+        | None ->
+            R.error_msgf "Could not find %ith element from field %S from:\n%a"
+              (idx + 1) field pp json )
+    | `Null -> R.error_msgf "Could not find %S from:\n%a" field pp json
+    | _ -> R.error_msgf "Could not parse %S from:\n%a" field pp json
+
+  let opt = function Ok x -> Some x | Error _ -> None
 end
 
 let parse json =
   let open Yojson.Basic.Util in
   let open Rresult.R.Infix in
   let j = member "coord" json in
-  Convert.int ~field:"lon" j >>= fun lon ->
-  Convert.int ~field:"lat" j >>= fun lat ->
+  Convert.float ~field:"lon" j >>= fun lon ->
+  Convert.float ~field:"lat" j >>= fun lat ->
   Ok { lon; lat } >>= fun coord ->
-  let j = member "weather" json in
-  Convert.int ~field:"int" j >>= fun id ->
+  Convert.list ~field:"weather" 0 json >>= fun j ->
+  Convert.int ~field:"id" j >>= fun id ->
   Convert.string ~field:"main" j >>= fun main ->
   Convert.string ~field:"description" j >>= fun description ->
   Convert.string ~field:"icon" j >>= fun icon ->
@@ -82,8 +96,8 @@ let parse json =
   Convert.float ~field:"temp_max" j >>= fun temp_max ->
   Convert.int ~field:"pressure" j >>= fun pressure ->
   Convert.int ~field:"humidity" j >>= fun humidity ->
-  Convert.int ~field:"sea_level" j >>= fun sea_level ->
-  Convert.int ~field:"grnd_level" j >>= fun grnd_level ->
+  let sea_level = Convert.opt (Convert.int ~field:"sea_level" j) in
+  let grnd_level = Convert.opt (Convert.int ~field:"grnd_level" j) in
   Ok
     {
       temp;
@@ -105,13 +119,16 @@ let parse json =
   Convert.int ~field:"all" j >>= fun all ->
   Ok { all } >>= fun clouds ->
   let j = member "rain" json in
-  Convert.int ~field:"1h" j >>= fun one_h ->
-  Convert.int ~field:"3h" j >>= fun three_h ->
+  Convert.float ~field:"1h" j >>= fun one_h ->
+  let three_h = Convert.opt (Convert.float ~field:"3h" j) in
   Ok ({ one_h; three_h } : rain) >>= fun rain ->
-  let j = member "snow" json in
-  Convert.int ~field:"1h" j >>= fun one_h ->
-  Convert.int ~field:"3h" j >>= fun three_h ->
-  Ok { one_h; three_h } >>= fun snow ->
+  ( try
+      let j = member "snow" json in
+      Convert.float ~field:"1h" j >>= fun one_h ->
+      let three_h = Convert.opt (Convert.float ~field:"3h" j) in
+      Ok (Some { one_h; three_h })
+    with _ -> Ok None )
+  >>= fun snow ->
   Convert.int ~field:"dt" json >>= fun dt ->
   let j = member "sys" json in
   Convert.string ~field:"country" j >>= fun country ->

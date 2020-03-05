@@ -1,4 +1,4 @@
-type coord = { lon : int; lat : int }
+type coord = { lon : float; lat : float }
 
 type weather = { id : int; main : string; description : string; icon : string }
 
@@ -9,17 +9,17 @@ type main = {
   temp_max : float;
   pressure : int;
   humidity : int;
-  sea_level : int;
-  grnd_level : int;
+  sea_level : int option;
+  grnd_level : int option;
 }
 
 type wind = { speed : float; deg : float }
 
 type clouds = { all : int }
 
-type rain = { one_h : int; three_h : int }
+type rain = { one_h : float; three_h : float option }
 
-type snow = { one_h : int; three_h : int }
+type snow = { one_h : float; three_h : float option }
 
 type sys = { country : string; sunrise : int; sunset : int }
 
@@ -31,7 +31,7 @@ type t = {
   wind : wind;
   clouds : clouds;
   rain : rain;
-  snow : snow;
+  snow : snow option;
   dt : int;
   sys : sys;
   timezone : int;
