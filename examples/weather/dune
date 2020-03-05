@@ -1,0 +1,4 @@
+(executable
+ (public_name example_weather)
+ (package weather)
+ (libraries weather))
