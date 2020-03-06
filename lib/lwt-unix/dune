@@ -2,4 +2,4 @@
  (name weather_lwt_unix)
  (public_name weather-lwt-unix)
  (synopsis "Lwt/Unix backend")
- (libraries cohttp-lwt-unix))
+ (libraries cohttp-lwt-unix weather-lwt))

@@ -1,0 +1,4 @@
+(executable
+ (public_name example_weather_lwt_unix)
+ (package weather-lwt-unix)
+ (libraries weather-lwt-unix))
