@@ -7,6 +7,6 @@ let start _ =
         (Weather_mirage.by_city_state ~city_name:"London" ~state:"uk" ~api_key
            ?lang:None ?units:None)
     with
-  | Ok { weather; _ } -> print_endline weather.description
-  | Error (`Msg e) -> print_endline ("error: " ^ e) );
+  | Ok { weather; _ } -> Logs.info (fun f -> f "%s" weather.description)
+  | Error (`Msg e) -> Logs.info (fun f -> f "error: %s" e) );
   Lwt.return_unit
