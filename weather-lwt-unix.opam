@@ -4,13 +4,11 @@ authors: [
   "Guillaume Petiot"
 ]
 synopsis: "An OCaml library to access current weather data from OpenWeather"
-description: """
-"""
 license: "ISC"
-homepage: ""
-dev-repo: ""
-bug-reports: ""
-doc: ""
+homepage: "https://github.com/gpetiot/ocaml-weather"
+dev-repo: "git+https://github.com/gpetiot/ocaml-weather.git"
+bug-reports: "https://github.com/gpetiot/ocaml-weather/issues"
+doc: "https://github.com/gpetiot/ocaml-weather"
 depends: [
   "ocaml"
   "dune" {>= "1.1.0"}
