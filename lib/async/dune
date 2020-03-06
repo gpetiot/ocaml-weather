@@ -2,4 +2,4 @@
  (name weather_async)
  (public_name weather-async)
  (synopsis "Async backend")
- (libraries cohttp-async))
+ (libraries cohttp-async weather-lib))
