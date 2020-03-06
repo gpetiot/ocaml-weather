@@ -30,7 +30,7 @@ type t = {
   visibility : int;
   wind : wind;
   clouds : clouds;
-  rain : rain;
+  rain : rain option;
   snow : snow option;
   dt : int;
   sys : sys;

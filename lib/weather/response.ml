@@ -30,7 +30,7 @@ type t = {
   visibility : int;
   wind : wind;
   clouds : clouds;
-  rain : rain;
+  rain : rain option;
   snow : snow option;
   dt : int;
   sys : sys;
@@ -118,10 +118,13 @@ let parse json =
   let j = member "clouds" json in
   Convert.int ~field:"all" j >>= fun all ->
   Ok { all } >>= fun clouds ->
-  let j = member "rain" json in
-  Convert.float ~field:"1h" j >>= fun one_h ->
-  let three_h = Convert.opt (Convert.float ~field:"3h" j) in
-  Ok ({ one_h; three_h } : rain) >>= fun rain ->
+  ( try
+      let j = member "rain" json in
+      Convert.float ~field:"1h" j >>= fun one_h ->
+      let three_h = Convert.opt (Convert.float ~field:"3h" j) in
+      Ok (Some ({ one_h; three_h } : rain))
+    with _ -> Ok None )
+  >>= fun rain ->
   ( try
       let j = member "snow" json in
       Convert.float ~field:"1h" j >>= fun one_h ->
