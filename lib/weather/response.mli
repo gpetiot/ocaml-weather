@@ -13,7 +13,7 @@ type main = {
   grnd_level : int option;
 }
 
-type wind = { speed : float; deg : float }
+type wind = { speed : float; deg : float option }
 
 type clouds = { all : int }
 

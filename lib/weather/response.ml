@@ -13,7 +13,7 @@ type main = {
   grnd_level : int option;
 }
 
-type wind = { speed : float; deg : float }
+type wind = { speed : float; deg : float option }
 
 type clouds = { all : int }
 
@@ -113,7 +113,7 @@ let parse json =
   Convert.int ~field:"visibility" json >>= fun visibility ->
   let j = member "wind" json in
   Convert.float ~field:"speed" j >>= fun speed ->
-  Convert.float ~field:"deg" j >>= fun deg ->
+  let deg = Convert.opt (Convert.float ~field:"deg" j) in
   Ok { speed; deg } >>= fun wind ->
   let j = member "clouds" json in
   Convert.int ~field:"all" j >>= fun all ->
