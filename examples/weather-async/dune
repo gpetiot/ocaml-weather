@@ -1,4 +1,4 @@
 (executable
  (public_name example_weather_async)
  (package weather-async)
- (libraries weather-async))
+ (libraries weather-async async_ssl))
