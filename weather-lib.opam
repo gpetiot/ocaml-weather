@@ -13,6 +13,9 @@ depends: [
   "ocaml"
   "dune" {>= "1.1.0"}
   "curly"
+  "rresult"
+  "uri"
+  "yojson"
 ]
 build: [
   ["dune" "subst"] {pinned}
